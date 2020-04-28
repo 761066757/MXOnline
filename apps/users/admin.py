@@ -1,8 +1,15 @@
 from django.contrib import admin
+#
+# # Register your models here.
+#
+# from apps.users.models import UserProfile
+# class UserprofileAdmin(admin.ModelAdmin):
+#     pass
+# admin.site.register(UserProfile,UserprofileAdmin)
 
-# Register your models here.
 
+
+# 因为用户表相对来说
 from apps.users.models import UserProfile
-class UserprofileAdmin(admin.ModelAdmin):
-    pass
-admin.site.register(UserProfile,UserprofileAdmin)
+from django.contrib.auth.admin import UserAdmin
+admin.site.register(UserProfile, UserAdmin)
