@@ -16,9 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 import xadmin
-# from apps.users import views
+from apps.users import views
 from django.views.generic import  TemplateView
 from apps.users.views import LoginView
+from apps.organizations.views import OrgView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,6 +29,8 @@ urlpatterns = [
     # path('',TemplateView.as_view(template_name="index.html")),
     path('',TemplateView.as_view(template_name="index.html"),name='index'),
     # path('login/',LoginView.as_view())
-    path('login/',LoginView.as_view(),name='login')
+    path('login/',LoginView.as_view(),name='login'),
+#     配置机构展示列表
+    path('orglist/', OrgView.as_view(), name='org_list')
 
 ]

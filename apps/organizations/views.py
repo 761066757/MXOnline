@@ -6,7 +6,7 @@ from apps.organizations.models import CourseOrg,City,Teacher
 class OrgView(View):
     def get(self, request, *args, **kwargs):
         """
-            展示
+            展示授课机构列表页
             :param request:
             :param args:
             :param kwargs:
