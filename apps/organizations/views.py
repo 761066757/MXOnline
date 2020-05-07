@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import View
-from apps.organizations.models import CourseOrg,City,Teacher
+from apps.organizations.models import CourseOrg, City, Teacher
 # Create your views here.
 
 class OrgView(View):
@@ -12,10 +12,12 @@ class OrgView(View):
             :param kwargs:
             :return:
         """
+        # 查询机构数量
         all_orgs = CourseOrg.objects.all()
-        all_nums = CourseOrg.objects.all().count()
-        all_city = City.objects.all().count()
+        # 查询多少家
+        org_nums = CourseOrg.objects.all().count()
+        all_citys = City.objects.all().count()
 
 
         # return render(request, 'org-list.html')
-        return render(request, 'org-list.html',{'all_orgs': all_orgs,})
+        return render(request, 'org-list.html',{'all_orgs': all_orgs,'org_nums':org_nums ,'all_citys':all_citys})
