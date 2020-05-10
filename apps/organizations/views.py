@@ -17,14 +17,21 @@ class OrgView(View):
         """
         # 查询机构数量
         all_orgs = CourseOrg.objects.all()
-        # 查询多少家
-        org_nums = CourseOrg.objects.all().count()
         all_citys = City.objects.all()
 
         # 获取点击的类目
         category = request.GET.get("ct", "")
         if category:
             all_orgs = all_orgs.filter(category=category)
+
+        # 所在城市进行筛选
+        city_id = request.GET.get("city", "")
+        if city_id:
+            if city_id.isdigit():
+                all_orgs = all_orgs.filter(city_id=int(city_id))
+
+        # 查询多少家
+        org_nums = all_orgs.count()
 
         try:
             page = request.GET.get('page', 1)
