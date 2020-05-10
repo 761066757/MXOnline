@@ -1,28 +1,29 @@
 import xadmin
-from apps.organizations.models import *
-# 不用继承admin.ModelAdmin，
-class CityAdmin(object):
-    # pass
-    # # 显示字典
-    list_display = ["id", "name", "city_desc"]
-    # # 搜索字段(过滤)
-    search_fields = ["name", "city_desc"]
-    list_filter = ["id", "name", "city_desc"]
-class CourseOrgAdmin(object):
-    # pass
-    # 显示字典
-    list_display = ["id", "city", "name","tag","category"]
-    # 搜索字段(过滤)
-    search_fields = ["city", "name","tag","category"]
-    list_filter = ["id", "city", "name","tag","category"]
-class TeacherAdmin(object):
-    # pass
-    # # 显示字典
-    list_display = ["id", "name", "user","courseorg","teach_times"]
-    # # 搜索字段(过滤)
-    search_fields = ["name", "user","courseorg","teach_times"]
-    list_filter = ["id", "name", "user","courseorg","teach_times"]
 
-xadmin.site.register(City, CityAdmin)
-xadmin.site.register(CourseOrg, CourseOrgAdmin)
+from apps.organizations.models import Teacher, CourseOrg, City
+
+
+class TeacherAdmin(object):
+    list_display = ['org', 'name', 'work_years', 'work_company']
+    search_fields = ['org', 'name', 'work_years', 'work_company']
+    list_filter = ['org', 'name', 'work_years', 'work_company']
+
+
+class CourseOrgAdmin(object):
+    list_display = ['name', 'desc', 'click_nums', 'fav_nums']
+    search_fields = ['name', 'desc', 'click_nums', 'fav_nums']
+    list_filter = ['name', 'desc', 'click_nums', 'fav_nums']
+    style_fields = {
+        "desc": "ueditor"
+    }
+
+class CityAdmin(object):
+    list_display = ["id", "name", "desc"]
+    search_fields = ["name", "desc"]
+    list_filter = ["name", "desc", "add_time"]
+    list_editable = ["name", "desc"]
+
+
 xadmin.site.register(Teacher, TeacherAdmin)
+xadmin.site.register(CourseOrg, CourseOrgAdmin)
+xadmin.site.register(City, CityAdmin)

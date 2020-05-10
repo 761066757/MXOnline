@@ -1,23 +1,39 @@
 from django.shortcuts import render
 from django.views.generic import View
 from apps.organizations.models import CourseOrg, City, Teacher
-# Create your views here.
+from django.shortcuts import render_to_response
+from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 
+
+# Create your views here.
 class OrgView(View):
     def get(self, request, *args, **kwargs):
         """
-            展示授课机构列表页
-            :param request:
-            :param args:
-            :param kwargs:
-            :return:
+        展示授课机构列表页
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
         """
         # 查询机构数量
         all_orgs = CourseOrg.objects.all()
         # 查询多少家
         org_nums = CourseOrg.objects.all().count()
-        all_citys = City.objects.all().count()
+        all_citys = City.objects.all()
 
+        # 获取点击的类目
+        category = request.GET.get("ct", "")
+        if category:
+            all_orgs = all_orgs.filter(category=category)
 
-        # return render(request, 'org-list.html')
-        return render(request, 'org-list.html',{'all_orgs': all_orgs,'org_nums':org_nums ,'all_citys':all_citys})
+        try:
+            page = request.GET.get('page', 1)
+        except PageNotAnInteger:
+            page = 1
+
+        p = Paginator(all_orgs, per_page=2, request=request) # 每页显示多少个
+
+        orgs = p.page(page)
+
+        return render(request, "org-list.html",
+                      {"all_orgs": orgs, "org_nums": org_nums, "all_citys": all_citys})
