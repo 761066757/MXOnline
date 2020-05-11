@@ -32,10 +32,13 @@ urlpatterns = [
     # zheyang就不用定义视图函数
     # path('',TemplateView.as_view(template_name="index.html")),
     path('',TemplateView.as_view(template_name="index.html"),name='index'),
+    path('courselist',TemplateView.as_view(template_name="course-list.html"),name='course-list'),
     # path('login/',LoginView.as_view())
     path('login/',LoginView.as_view(),name='login'),
 #     配置机构展示列表
     path('orglist/', OrgView.as_view(), name='org_list'),
+# #     配置课程展示列表
+#     path('courselist/', OrgView.as_view(), name='course_list'),
 # 配置上传文件的访问url
     url(r'^media/(?P<path>.*)$',serve,{"document_root":MEDIA_ROOT})
 ]

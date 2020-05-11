@@ -19,6 +19,8 @@ class OrgView(View):
         all_orgs = CourseOrg.objects.all()
         all_citys = City.objects.all()
 
+        hot_orgs = all_orgs.order_by("-click_nums")[:3]
+
         # 获取点击的类目
         category = request.GET.get("ct", "")
         if category:
@@ -30,6 +32,14 @@ class OrgView(View):
             if city_id.isdigit():
                 all_orgs = all_orgs.filter(city_id=int(city_id))
 
+        # 对机构进行排序
+        sort = request.GET.get("sort", "")
+        if sort == "students":
+            all_orgs = all_orgs.order_by('-students')  # 减号是倒序
+        elif sort == "courses":
+            all_orgs = all_orgs.order_by('-course_nums')  # 减号是倒序
+
+
         # 查询多少家
         org_nums = all_orgs.count()
 
@@ -38,9 +48,16 @@ class OrgView(View):
         except PageNotAnInteger:
             page = 1
 
-        p = Paginator(all_orgs, per_page=2, request=request) # 每页显示多少个
+        p = Paginator(all_orgs, per_page=5, request=request) # 每页显示多少个
 
         orgs = p.page(page)
 
         return render(request, "org-list.html",
-                      { "all_orgs": orgs, "org_nums": org_nums, "all_citys": all_citys, "city_id":city_id})
+                      { "all_orgs": orgs,
+                        "org_nums": org_nums,
+                        "all_citys": all_citys,
+                        "city_id":city_id,
+                        "category":category,
+                        "sort":sort,
+                        "hot_orgs": hot_orgs,
+                        })
