@@ -12,6 +12,7 @@
     </section>
 {% endblock %}
 {% block content %}
+
     <section>
         <div class="wp butler_list_box list">
             <div class='left'>
@@ -65,10 +66,8 @@
                                 {#                                <li class=""><a href="?sort=students&ct=&city=">学习人数 &#8595;</a></li>#}
                                 {#                                <li class=""><a href="?sort=courses&ct=&city=">课程数 &#8595;</a></li>#}
                                 <li class="{% if sort == '' %}active{% endif %}"><a href="?ct=&city=">全部</a></li>
-                                <li class="{% if sort == 'students' %}active{% endif %}"><a
-                                        href="?sort=students&ct={{ category }}&city={{ city_id }}">学习人数 &#8595;</a></li>
-                                <li class="{% if sort == 'courses' %}active{% endif %}"><a
-                                        href="?sort=courses&ct={{ category }}&city={{ city_id }}">课程数 &#8595;</a></li>
+                                <li class="{% if sort == 'students' %}active{% endif %}"><a href="?sort=students&ct={{ category }}&city={{ city_id }}">学习人数 &#8595;</a></li>
+                                <li class="{% if sort == 'courses' %}active{% endif %}"><a href="?sort=courses&ct={{ category }}&city={{ city_id }}">课程数 &#8595;</a></li>
                             </ul>
                         </div>
 
@@ -98,7 +97,7 @@
                                         </a>
                                     </div>
                                     <ul class="cont">
-                                        <li class="first"><p class="pic9">课程数:<span>{{ org.courses }}</span></p>
+                                        <li class="first"><p class="pic9">课程数:<span>{{ org.course_nums }}</span></p>
                                             <p class="c7">学习人数：<span>{{ org.students }}</span></p></li>
                                         <li class="c8" style="padding-left:18px;">{{ org.address }}</li>
                                         <li class="pic10" style="padding-left:18px;">经典课程：
@@ -174,6 +173,7 @@
                     </div>
                     <p class="error company-tips" id="jsCompanyTips"></p>
                     <input class="btn" type="text" id="jsStayBtn" value="立即咨询 >"/>
+                    {% csrf_token %}
                 </form>
             </div>
 
@@ -217,4 +217,29 @@
             </div>
         </div>
     </section>
+{% endblock %}
+{% block custom_js %}
+    <script>
+    $(function(){
+        $(document).ready(function() {
+            $('#jsStayBtn').on('click', function () {
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "{% url 'org:add_ask' %}",
+                    data: $('#jsStayForm').serialize(),
+                    async: true,
+                    success: function (data) {
+                        if (data.status == 'success') {
+                            $('#jsStayForm')[0].reset();
+                            $('#jsCompanyTips').html(data.msg);
+                        } else if (data.status == 'fail') {
+                            $('#jsCompanyTips').html(data.msg)
+                        }
+                    },
+                });
+            });
+        });
+    })
+</script>
 {% endblock %}

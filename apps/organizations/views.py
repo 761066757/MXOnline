@@ -3,7 +3,8 @@ from django.views.generic import View
 from apps.organizations.models import CourseOrg, City, Teacher
 from django.shortcuts import render_to_response
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
-
+from django.http import JsonResponse
+from apps.organizations.forms import AddAskForm
 
 # Create your views here.
 class OrgView(View):
@@ -35,10 +36,9 @@ class OrgView(View):
         # 对机构进行排序
         sort = request.GET.get("sort", "")
         if sort == "students":
-            all_orgs = all_orgs.order_by('-students')  # 减号是倒序
+            all_orgs = all_orgs.order_by('-students')  # 减号是倒序-学生人数
         elif sort == "courses":
-            all_orgs = all_orgs.order_by('-course_nums')  # 减号是倒序
-
+            all_orgs = all_orgs.order_by('-course_nums')  # 减号是倒序-课程数
 
         # 查询多少家
         org_nums = all_orgs.count()
@@ -47,11 +47,8 @@ class OrgView(View):
             page = request.GET.get('page', 1)
         except PageNotAnInteger:
             page = 1
-
         p = Paginator(all_orgs, per_page=5, request=request) # 每页显示多少个
-
         orgs = p.page(page)
-
         return render(request, "org-list.html",
                       { "all_orgs": orgs,
                         "org_nums": org_nums,
@@ -63,7 +60,26 @@ class OrgView(View):
                         })
 
 
+
 class AddAsk(View):
-    """"处理用户咨询模块"""
     def post(self, request, *args, **kwargs):
-        pass
+        """
+        处理用户的咨询模块
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        userask_form = AddAskForm(request.POST)
+        # 如果合法则保存
+        if userask_form.is_valid():
+            userask_form.save(commit=True)
+            return JsonResponse({
+                "status": "success",
+                 "msg": "提交成功"
+            })
+        else:
+            return JsonResponse({
+                "status": "fail",
+                "msg": "提交出错"
+            })
