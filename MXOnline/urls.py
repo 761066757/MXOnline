@@ -41,7 +41,7 @@ urlpatterns = [
 
     # 授课机构相关操作
     url(r'^org/', include(('apps.organizations.urls',"organizations") , namespace='org')),
-    # 配置课程展示列表
+    # 配置课程相关页面
     url(r'^course/', include(('apps.courses.urls',"courses") , namespace='course')),
     # 配置上传文件的访问url
     url(r'^media/(?P<path>.*)$',serve,{"document_root":MEDIA_ROOT})
