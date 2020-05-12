@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.generic.base import View
 from apps.courses.models import Course
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
-
+from apps.operations.models import UserFavorite
 # Create your views here.
 class CourseListView(View):
     def get(self, request, *args, **kwargs):
@@ -43,7 +43,20 @@ class CourseDetailView(View):
         course = Course.objects.get(id=int(course_id))
         course.click_nums += 1
         course.save()
+        # 获取收藏状态
+        has_fav_course = False
+        has_fav_org = False
+        # 用户是否登录
+        if request.user.is_authenticated:
+            # 查询用户是否收藏了该课程，如果有，证明用户收藏了这个课
+            if UserFavorite.objects.filter(user=request.user, fav_id=course.id, fav_type=1):
+                has_fav_course = True
+            # 查询用户是否收藏了该课程机构，如果有，证明用户收藏了这个机构
+            if UserFavorite.objects.filter(user=request.user, fav_id=course.id, fav_type=2):
+                has_fav_org = True
 
         return render(request, "course-detail.html", {
             "course":course,
+            "has_fav_course":has_fav_course,
+            "has_fav_org":has_fav_org
         })
