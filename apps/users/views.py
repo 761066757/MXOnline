@@ -5,20 +5,13 @@ from apps.users.form import LoginForm
 from django.contrib.auth import authenticate, login
 from django.urls import reverse
 
+from apps.users.models import UserProfile
 # Create your views here.
-#
-# def index(request):
-#     return  render(request,'index.html')
-
-#
 class LoginView(View):
-    # pass
     def get(self, request, *args, **kwargs):
         return render(request, 'login.html')
-#
+
     def post(self, request, *args, **kwargs):
-        # pass
-        # return HttpResponse('OK')
         """
         用户登录验证
         :param request:
@@ -27,6 +20,7 @@ class LoginView(View):
         :return:
         """
         # 实例化 LoginForm
+        
         login_form = LoginForm(request.POST)
         if login_form.is_valid():
 
@@ -42,7 +36,6 @@ class LoginView(View):
                 return HttpResponseRedirect(reverse("index"))
             else:
             # 未查询到用户，要求重新登录,仍然返回login界面
-            #     return render(request, 'login.html')
-                return render(request, 'login.html',{"msg":"用户名密码错误!","login_form": login_form})
+                return render(request, 'login.html',{"msg":"用户名密码错误", "login_form":login_form})
         else:
-            return render(request, "login.html", {"login_form": login_form})
+            return render(request, "login.html", {"login_form":login_form})

@@ -1,23 +1,19 @@
-from django.db import models
-
-# Create your models here.
 from datetime import datetime
 
-from django.contrib.auth.models import AbstractUser
+from django.db import models
 
+from django.contrib.auth.models import AbstractUser
+# Create your models here.
 GENDER_CHOICES = (
     ("male", "男"),
     ("female", "女")
 )
 
-
 class BaseModel(models.Model):
     add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
-
     class Meta:
-        abstract = True  # 将该基类定义为抽象类，即不生成对应的数据库表
+        abstract =True # 将该基类定义为抽象类，即不生成对应的数据库表
         # 只作为一个可以继承的基类
-
 
 class UserProfile(AbstractUser):
     nick_name = models.CharField(max_length=50, verbose_name="昵称", default="")
@@ -43,5 +39,7 @@ class UserProfile(AbstractUser):
             return self.nick_name
         else:
             return self.username
+
+
 
 

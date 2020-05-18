@@ -37,13 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'apps.users.apps.UserConfig',
+    'apps.users.apps.UsersConfig',
     'apps.courses.apps.CoursesConfig',
     'crispy_forms',
     'xadmin.apps.XAdminConfig',
     'apps.organizations.apps.OrganizationsConfig',
     'pure_pagination',
-    'apps.operations.apps.OperationsConfig',
+    'apps.operations.apps.OperationsConfig'
 
 ]
 
