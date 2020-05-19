@@ -3,6 +3,7 @@ from django.views.generic.base import View
 from apps.courses.models import Course
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 from apps.operations.models import UserFavorite
+from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 class CourseListView(View):
     def get(self, request, *args, **kwargs):
@@ -61,7 +62,8 @@ class CourseDetailView(View):
             "has_fav_org": has_fav_org,
         })
 
-class CourseLessonView(View):
+class CourseLessonView(LoginRequiredMixin,View):
+    login_url = '/login/'
     def get(self, request, course_id, *args, **kwargs):
         """
         获取课程章节信息
@@ -69,7 +71,6 @@ class CourseLessonView(View):
         course = Course.objects.get(id=int(course_id))
         course.click_nums += 1
         course.save()
-
         return render(request, "course-video.html", {
             "course": course,
         })
