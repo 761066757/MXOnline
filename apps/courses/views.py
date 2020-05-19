@@ -4,7 +4,7 @@ from apps.courses.models import Course
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 from apps.operations.models import UserFavorite
 from django.contrib.auth.mixins import LoginRequiredMixin
-from apps.courses.models import Video,CourseResource
+from apps.courses.models import Video,CourseResource,CourseTag
 from apps.operations.models import UserCourse
 # Create your views here.
 class CourseListView(View):
@@ -57,14 +57,23 @@ class CourseDetailView(View):
             # 查询用户是否收藏了该课程机构，如果有，证明用户收藏了这个机构
             if UserFavorite.objects.filter(user=request.user, fav_id=course.id, fav_type=2):
                 has_fav_org = True
+        #
+        # # 相关课程推荐
+        # # 通过课程的单标签tag做课程的推荐
+        # tag = course.tag
+        # related_courses = []
+        # if tag:
+        #     # 过滤掉自己
+        #     related_courses = Course.objects.filter(tag=tag).exclude(id__in=[course.id])[:3]
 
-        # 相关课程推荐
-        # 通过课程的单标签tag做课程的推荐
-        tag = course.tag
-        related_courses = []
-        if tag:
-            # 过滤掉自己
-            related_courses = Course.objects.filter(tag=tag).exclude(id__in=[course.id])[:3]
+        # 通过CourseTag类进行相关课程推荐
+        tags = course.coursetag_set.all()
+        # 遍历
+        tag_list = [tag.tag for tag in tags]
+        courses_tags = CourseTag.objects.filter(tag__in=tag_list).exclude(course__id=course.id)
+        related_courses = set()
+        for courses_tag in courses_tags:
+            related_courses.add(courses_tag.course)
 
         return render(request, "course-detail.html", {
             "course": course,
