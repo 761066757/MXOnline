@@ -56,7 +56,20 @@ class CourseDetailView(View):
                 has_fav_org = True
 
         return render(request, "course-detail.html", {
-            "course":course,
-            "has_fav_course":has_fav_course,
-            "has_fav_org":has_fav_org
+            "course": course,
+            "has_fav_course": has_fav_course,
+            "has_fav_org": has_fav_org,
+        })
+
+class CourseLessonView(View):
+    def get(self, request, course_id, *args, **kwargs):
+        """
+        获取课程章节信息
+        """
+        course = Course.objects.get(id=int(course_id))
+        course.click_nums += 1
+        course.save()
+
+        return render(request, "course-video.html", {
+            "course": course,
         })
