@@ -20,6 +20,7 @@ from apps.users import views
 from django.views.generic import  TemplateView
 from apps.users.views import LoginView
 from apps.organizations.views import OrgView
+from apps.operations.views import IndexView
 
 from django.conf.urls import url
 from django.conf.urls import include
@@ -32,11 +33,13 @@ urlpatterns = [
     path('xadmin/', xadmin.site.urls),
     # path('', views.index),
     # zheyang就不用定义视图函数
-    # path('',TemplateView.as_view(template_name="index.html")),
-    path('',TemplateView.as_view(template_name="index.html"),name='index'),
-    path('courselist',TemplateView.as_view(template_name="course-list.html"),name='course-list'),
+    # path('',TemplateView.as_view(template_name="index.html"),name='index'),
+    path('',IndexView.as_view(),name='index'),
+
+    # path('courselist/',TemplateView.as_view(template_name="course-list.html"),name='course-list'),
     # path('login/',LoginView.as_view())
     path('login/',LoginView.as_view(),name='login'),
+
     #     配置机构展示列表
     # path('orglist/', OrgView.as_view(), name='org_list'),
 

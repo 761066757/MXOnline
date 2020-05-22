@@ -2,7 +2,7 @@ from django.views.generic import View
 from django.shortcuts import render
 from apps.operations.forms import UserFavForm
 from django.http import JsonResponse
-from apps.operations.models import UserFavorite,CourseComments
+from apps.operations.models import UserFavorite,CourseComments,Banner
 from apps.courses.models import Course
 from apps.organizations.models import CourseOrg, Teacher
 from apps.operations.forms import CommentsForm
@@ -12,8 +12,8 @@ from apps.operations.forms import CommentsForm
 class AddFavView(View):
     def post(self, request, *args, **kwargs):
         """
-                用户收藏，取消收藏
-                """
+        用户收藏，取消收藏
+        """
         # 先判断用户是否登录
         if not request.user.is_authenticated:
             return JsonResponse({
@@ -99,3 +99,28 @@ class CommentView(View):
                     "msg": "参数错误"
                 })
 
+class IndexView(View):
+    def get(self, request, *args, **kwargs):
+        """
+        首页处理
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        # banner加载
+        banners = Banner.objects.all().order_by("index")[:4]
+
+        # 公开课加载 （除去banner之外的）
+        courses = Course.objects.filter(is_banner=False)[:6]
+        # 小banner
+        banner_courses =  Course.objects.filter(is_banner=True)[:4]
+
+        # 课程机构加载
+        course_orgs = CourseOrg.objects.all()[:15]
+        return render(request,'index.html',{
+            "banners":banners,
+            "courses":courses,
+            "course_orgs":course_orgs,
+            "banner_courses":banner_courses,
+        })
