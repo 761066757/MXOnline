@@ -44,12 +44,12 @@
                                              src="/static/media/image/2016/12/default_big_14.png"/>
                                     </dt>
                                     <dd>
-                                        <h2>django</h2>
+                                        <h2></h2>
                                         <p>EricLee</p>
                                     </dd>
                                 </dl>
                                 <div class="btn">
-                                    <a class="personcenter fl" href="usercenter-info.html">进入个人中心</a>
+                                   <a class="personcenter fl" href="{% url 'users:info' %}">进入个人中心</a>
 {#                                    <a class="fr" href="/logout/">退出</a>#}
                                     <a class="fr" href="{% url 'logout' %}">退出</a>
                                 </div>
@@ -97,13 +97,11 @@
                                     公开课<img class="hot" src="/static/images/nav_hot.png">
                                 </a>
                             </li>
-                            <li>
-                                <a href="">授课教师</a>
+                            <li class="{% if request.path|slice:'13' == '/org/teachers' %}active{% endif %}">
+                                <a href="{% url 'org:teachers' %}">授课教师</a>
                             </li>
-                           <li class="{% if request.path|slice:'4' == '/org' %}active{% endif %}" >
-                               <a href="{% url 'org:list' %}">
-                                   授课机构
-                               </a>
+                            <li  class="{% if request.path|slice:'13' != '/org/teachers' %}active{% endif %}">
+                               <a href="{% url 'org:list' %}">授课机构</a>
                            </li>
                         </ul>
                     </div>

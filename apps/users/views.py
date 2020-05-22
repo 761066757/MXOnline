@@ -5,7 +5,7 @@ from apps.users.form import LoginForm
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from apps.users.models import UserProfile
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 class LoginView(View):
     def get(self, request, *args, **kwargs):
@@ -58,3 +58,8 @@ class LogoutView(View):
         logout(request)
         return HttpResponseRedirect(reverse("index"))
 
+class UserInfoView(LoginRequiredMixin, View):
+    login_url = '/login/'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, 'usercenter-info.html')

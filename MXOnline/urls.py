@@ -52,5 +52,7 @@ urlpatterns = [
     # 用户相关操作
     url(r'^op/', include(('apps.operations.urls', "operations"), namespace="op")),
     path('logout/', LogoutView.as_view(), name="logout"),
+
+    url(r'^users/', include(('apps.users.urls', 'users'), namespace='users')),
 ]
 
