@@ -6,7 +6,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from apps.users.models import UserProfile
 from apps.operations.models import UserFavorite
-from apps.courses.models import CourseOrg
+from apps.courses.models import Course
+from apps.organizations.models import Teacher,CourseOrg
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 class LoginView(View):
@@ -87,23 +88,32 @@ class MyFavOrgView(LoginRequiredMixin, View):
             "current_page": current_page,
             "org_list":org_list
         })
+
 class MyFavTeacherView(LoginRequiredMixin, View):
     login_url = '/login/'
     def get(self, request, *args, **kwargs):
-        current_page = 'myfav_taecher'
-        fav_orgs = UserFavorite.objects.filter(user=request.user, fav_type = 3)
-        org_list = []
-        for fav_org in fav_orgs:
-            org = CourseOrg.objects.get(id=fav_org.fav_id)
-            org_list.append(org)
+        current_page = 'myfav_teacher'
+        fav_teachers = UserFavorite.objects.filter(user=request.user,fav_type = 3)
+        teacher_list = []
+        for fav_teacher in fav_teachers:
+            teacher = Teacher.objects.get(id=fav_teacher.fav_id)
+            teacher_list.append(teacher)
         return render(request, 'usercenter-fav-teacher.html', {
             "current_page": current_page,
-            "org_list": org_list
+            "teacher_list": teacher_list,
         })
 
 
 class MyFavCourseView(LoginRequiredMixin, View):
     login_url = '/login/'
-
     def get(self, request, *args, **kwargs):
-        pass
+        current_page = 'myfav_course'
+        fav_courses = UserFavorite.objects.filter(user=request.user,fav_type = 1)
+        course_list = []
+        for fav_course in fav_courses:
+            course = Course.objects.get(id=fav_course.fav_id)
+            course_list.append(course)
+        return render(request, 'usercenter-fav-course.html', {
+            "current_page": current_page,
+            "course_list": course_list,
+        })
