@@ -5,6 +5,8 @@ from apps.users.form import LoginForm
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from apps.users.models import UserProfile
+from apps.operations.models import UserFavorite
+from apps.courses.models import CourseOrg
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 class LoginView(View):
@@ -68,3 +70,40 @@ class UserInfoView(LoginRequiredMixin, View):
 
 class MyCourseView(LoginRequiredMixin, View):
     pass
+
+
+# 用户收藏内容
+class MyFavOrgView(LoginRequiredMixin, View):
+    login_url = '/login/'
+
+    def get(self, request, *args, **kwargs):
+        current_page = 'myfavorg'
+        fav_orgs = UserFavorite.objects.filter(user=request.user,fav_type = 2)
+        org_list = []
+        for fav_org in fav_orgs:
+            org = CourseOrg.objects.get(id = fav_org.fav_id )
+            org_list.append(org)
+        return render(request, 'usercenter-fav-org.html', {
+            "current_page": current_page,
+            "org_list":org_list
+        })
+class MyFavTeacherView(LoginRequiredMixin, View):
+    login_url = '/login/'
+    def get(self, request, *args, **kwargs):
+        current_page = 'myfav_taecher'
+        fav_orgs = UserFavorite.objects.filter(user=request.user, fav_type = 3)
+        org_list = []
+        for fav_org in fav_orgs:
+            org = CourseOrg.objects.get(id=fav_org.fav_id)
+            org_list.append(org)
+        return render(request, 'usercenter-fav-teacher.html', {
+            "current_page": current_page,
+            "org_list": org_list
+        })
+
+
+class MyFavCourseView(LoginRequiredMixin, View):
+    login_url = '/login/'
+
+    def get(self, request, *args, **kwargs):
+        pass
